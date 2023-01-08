@@ -5,8 +5,14 @@ N = 100;
 ts = T / N;
 fs = 1 / ts;      %sampling rate
 t = -1:ts:1-ts;
-x = double(t == 0);
-plot(t, x);
+% x = zeros(length(t));
+% x(length(t)/2) = 100000000000; 
+% plot(t,x);
+
+y = dirac(x);
+idx = y == Inf; % find Inf
+y(idx) = 1;     % set Inf to finite value
+stem(x,y)
 xlabel('t');
 ylabel('x(t)');
 grid;

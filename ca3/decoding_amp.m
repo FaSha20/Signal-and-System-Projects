@@ -1,10 +1,13 @@
-function decoded_bin_message = decoding_amp(signal, bit_rate)
+function decoded_message = decoding_amp(signal, bit_rate)
 
     ts = 0.01;
     t = 0:ts:30-ts;    
-    out = '';
+    bin_out = '';
     i = 1;
-     
+    load MAP
+    out = '';
+    mapset = containers.Map(MAP(2,:), MAP(1,:));
+    
      if(bit_rate == 1)
         
          sig = sin(2 * pi * t);
@@ -13,21 +16,24 @@ function decoded_bin_message = decoding_amp(signal, bit_rate)
         
          while i < length(t)-50
              if(i == 1)
-                 if(corr2(signal(1:50), ss) == 1)
-                     out = strcat(out, '1');
+                
+                 if(round(corr2(signal(1:50), ss)))
+                     bin_out = strcat(bin_out, '1');
                  else
-                     out = strcat(out, '0');
+                     bin_out = strcat(bin_out, '0');
                  end
                  i = i + 50;
              else
                  z = signal(i:i + 99);
+                   
                  if round(corr2(z, s)) == 1
-                     out = strcat(out, '1');
+                     bin_out = strcat(bin_out, '1');
                  else
-                     out = strcat(out, '0');
+                     bin_out = strcat(bin_out, '0');
                  end
                  i = i + 100;
              end
+             
          end
         
      elseif(bit_rate == 2)
@@ -39,36 +45,44 @@ function decoded_bin_message = decoding_amp(signal, bit_rate)
          while i < length(t)/2 - 49
              
              if(i == 1)
-
+                  
                  z = signal(i:i + 49);
-                  if round(corr2(z,ss)) == 1
-                     if floor(max(z)) == 1
-                         out = strcat(out, '11');
-                     elseif round(max(z),2) == 0.67
-                         out = strcat(out, '10');
-                     elseif round(max(z),2) == 0.33
-                         out = strcat(out, '01');
+                 disp(corr2(z, ss))
+                 amp = round(max(abs(z)),2);
+                 if round(corr2(z,ss)) == 1
+                     if  amp <= 1 && amp > 5/6
+                         bin_out = strcat(bin_out, '11');
+                     elseif amp <= 5/6 && amp > 3/6
+                         bin_out = strcat(bin_out, '10');
+                     elseif amp <= 3/6 && amp > 1/6
+                         bin_out = strcat(bin_out, '01');
+                     else
+                         bin_out = strcat(bin_out, '00');
                      end
                  else
-                     out = strcat(out, '00');
+                     bin_out = strcat(bin_out, '00');
                  end
                  i = i + 50;
                  
              else
                   
                  z = signal(i:i + 99);
+                 disp(corr2(z, s))
+                 amp = round(max(abs(z)),2);
                  if round(corr2(z,s)) == 1
-                     if floor(max(z)) == 1
-                         out = strcat(out, '11');
-                     elseif round(max(z),2) == 0.67
-                         out = strcat(out, '10');
-                     elseif round(max(z),2) == 0.33
-                         out = strcat(out, '01');
+                     if  amp <= 1 && amp > 5/6
+                         bin_out = strcat(bin_out, '11');
+                     elseif amp <= 5/6 && amp > 3/6
+                         bin_out = strcat(bin_out, '10');
+                     elseif amp <= 3/6 && amp > 1/6
+                         bin_out = strcat(bin_out, '01');
+                     else
+                         bin_out = strcat(bin_out, '00');
                      end
                  else
-                     out = strcat(out, '00');
+                     bin_out = strcat(bin_out, '00');
                  end
-                i = i+100;
+                i = i + 100;
                 
               end
          end
@@ -83,58 +97,70 @@ function decoded_bin_message = decoding_amp(signal, bit_rate)
              
              if(i == 1)
 
-                 z = signal(i:i + 49);
+                  z = signal(i:i + 49);
+                  amp = round(max(abs(z)),2);
                   if round(corr2(z,ss)) == 1
-                     if floor(max(z)) == 1
-                         out = strcat(out, '111');
-                     elseif round(max(z),2) == 0.86
-                         out = strcat(out, '110');
-                     elseif round(max(z),2) == 0.71
-                         out = strcat(out, '101');
-                     elseif round(max(z),2) == 0.57
-                         out = strcat(out, '100');
-                     elseif round(max(z),2) == 0.43
-                         out = strcat(out, '011');
-                     elseif round(max(z),2) == 0.29
-                         out = strcat(out, '010');
-                     elseif round(max(z),2) == 0.14
-                         out = strcat(out, '001');
+                     if amp <= 1 && amp > 13/14
+                         bin_out = strcat(bin_out, '111');
+                     elseif amp <= 13/14 && amp > 11/14
+                         bin_out = strcat(bin_out, '110');
+                     elseif amp <= 11/14 && amp > 9/14
+                         bin_out = strcat(bin_out, '101');
+                     elseif amp <= 9/14 && amp > 7/14
+                         bin_out = strcat(bin_out, '100');
+                     elseif amp <= 7/14 && amp > 5/14
+                         bin_out = strcat(bin_out, '011');
+                     elseif amp <= 5/14 && amp > 3/14
+                         bin_out = strcat(bin_out, '010');
+                     elseif amp <= 3/14 && amp > 1/14
+                         bin_out = strcat(bin_out, '001');
+                     else
+                         bin_out = strcat(bin_out, '000');
                      end
                  else
-                     out = strcat(out, '000');
+                     bin_out = strcat(bin_out, '000');
                  end
                  i = i + 50;
                  
              else
                   
                  z = signal(i:i + 99);
+                 amp = round(max(abs(z)),2);
                  if round(corr2(z,s)) == 1
-                     if floor(max(z)) == 1
-                         out = strcat(out, '111');
-                     elseif round(max(z),2) == 0.86
-                         out = strcat(out, '110');
-                     elseif round(max(z),2) == 0.71
-                         out = strcat(out, '101');
-                     elseif round(max(z),2) == 0.57
-                         out = strcat(out, '100');
-                     elseif round(max(z),2) == 0.43
-                         out = strcat(out, '011');
-                     elseif round(max(z),2) == 0.29
-                         out = strcat(out, '010');
-                     elseif round(max(z),2) == 0.14
-                         out = strcat(out, '001');
+                     if amp <= 1 && amp > 13/14
+                         bin_out = strcat(bin_out, '111');
+                     elseif amp <= 13/14 && amp > 11/14
+                         bin_out = strcat(bin_out, '110');
+                     elseif amp <= 11/14 && amp > 9/14
+                         bin_out = strcat(bin_out, '101');
+                     elseif amp <= 9/14 && amp > 7/14
+                         bin_out = strcat(bin_out, '100');
+                     elseif amp <= 7/14 && amp > 5/14
+                         bin_out = strcat(bin_out, '011');
+                     elseif amp <= 5/14 && amp > 3/14
+                         bin_out = strcat(bin_out, '010');
+                     elseif amp <= 3/14 && amp > 1/14
+                         bin_out = strcat(bin_out, '001');
+                     else
+                         bin_out = strcat(bin_out, '000');
                      end
-                 else
-                     out = strcat(out, '000');
-                 end
-                i = i+100;
+                else
+                     bin_out = strcat(bin_out, '000');
+                end
+                i = i + 100;
                 
               end
          end
          
      end
      
-     decoded_bin_message = out;
+    %Decode BIN string to message
+    disp(bin_out)
+    for k = 1:5:length(bin_out)
+       out = strcat(out, mapset(bin_out(k:k+4)));
+    end
+    
+    decoded_message = out;
 
 end
 

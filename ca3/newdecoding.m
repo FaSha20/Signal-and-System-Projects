@@ -1,4 +1,4 @@
-function decoded_message = decoding_amp(signal, bit_rate)
+function decoded_message = newdecoding(signal, bit_rate)
 
     ts = 0.01;
     t = 0:ts:30-ts;    
@@ -82,7 +82,7 @@ function decoded_message = decoding_amp(signal, bit_rate)
                  else
                      bin_out = strcat(bin_out, '00');
                  end
-                i = i + 100;
+                i = i+100;
                 
               end
          end
@@ -97,14 +97,13 @@ function decoded_message = decoding_amp(signal, bit_rate)
              
              if(i == 1)
 
-                  z = signal(i:i + 49);
-                  amp = round(max(abs(z)),2);
+                 z = signal(i:i + 49);
                   if round(corr2(z,ss)) == 1
-                     if amp <= 1 && amp > 13/14
+                     if round(max(z), 2) == 1
                          bin_out = strcat(bin_out, '111');
-                     elseif amp <= 13/14 && amp > 11/14
+                     elseif round(max(z),2) == 0.86
                          bin_out = strcat(bin_out, '110');
-                     elseif amp <= 1 && amp > 13/14
+                     elseif round(max(z),2) == 0.71
                          bin_out = strcat(bin_out, '101');
                      elseif round(max(z),2) == 0.57
                          bin_out = strcat(bin_out, '100');

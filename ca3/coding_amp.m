@@ -1,16 +1,9 @@
 function out_signal = coding_amp(message, bit_rate)
 
-    map = cell(2,32);
-    letters = 'abcdefghijklmnopqrstuvwxyz .,!?;"';
-     bin_signal = '';
-
-    for i=1:32
-       map(1,i) = {letters(i)};
-       map(2,i)={dec2bin(i-1,5)};
-    end
-
-     mapset = containers.Map(map(1,:), map(2,:));
-   
+    load MAP
+    bin_signal = '';
+    mapset = containers.Map(MAP(1,:), MAP(2,:));
+    
     for j=1:length(message)
         bin_signal = strcat(bin_signal, mapset(message(j)));
     end    
