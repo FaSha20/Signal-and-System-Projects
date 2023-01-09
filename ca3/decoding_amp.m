@@ -1,4 +1,4 @@
-function decoded_message = decoding_amp(signal, bit_rate)
+function [decoded_message, bin_out] = decoding_amp(signal, bit_rate)
 
     ts = 0.01;
     t = 0:ts:30-ts;    
@@ -47,7 +47,7 @@ function decoded_message = decoding_amp(signal, bit_rate)
              if(i == 1)
                   
                  z = signal(i:i + 49);
-                 disp(corr2(z, ss))
+                % disp(corr2(z, ss))
                  amp = round(max(abs(z)),2);
                  if round(corr2(z,ss)) == 1
                      if  amp <= 1 && amp > 5/6
@@ -67,7 +67,7 @@ function decoded_message = decoding_amp(signal, bit_rate)
              else
                   
                  z = signal(i:i + 99);
-                 disp(corr2(z, s))
+                 %disp(corr2(z, s))
                  amp = round(max(abs(z)),2);
                  if round(corr2(z,s)) == 1
                      if  amp <= 1 && amp > 5/6
@@ -154,8 +154,9 @@ function decoded_message = decoding_amp(signal, bit_rate)
          
      end
      
+     
+     
     %Decode BIN string to message
-    disp(bin_out)
     for k = 1:5:length(bin_out)
        out = strcat(out, mapset(bin_out(k:k+4)));
     end

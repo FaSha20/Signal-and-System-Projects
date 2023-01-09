@@ -1,4 +1,4 @@
-function out_signal = coding_amp(message, bit_rate)
+function [out_signal, bin_signal] = coding_amp(message, bit_rate)
 
     load MAP
     bin_signal = '';
@@ -7,7 +7,7 @@ function out_signal = coding_amp(message, bit_rate)
     for j=1:length(message)
         bin_signal = strcat(bin_signal, mapset(message(j)));
     end    
-   disp(bin_signal);
+   %disp(bin_signal);
      
     if bit_rate == 1
        

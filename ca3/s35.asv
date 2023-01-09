@@ -3,18 +3,32 @@ close all
 ts = 0.01;
 t = 0:ts:30-ts;
 
-amplitude = 0.009;
+amplitude = 0.001;
+bitrate = 2;
+signal = 'signal';
 
-x = coding_amp('mignal', 2);
+[x, bin_input_sig] = coding_amp(signal, bitrate);
 xNoisy = x + amplitude * rand(1, length(x));
 
-y = decoding_amp(x, 2);
-yNoisy = decoding_amp(xNoisy, 2);
+y = decoding_amp(x, bitrate);
+[yNoisy, bin_judged_sig] = decoding_amp(xNoisy, bitrate);
 
 disp('Decoded message of Original signal: ')
 disp(y);
 disp('Decoded message of Noisy signal: ')
 disp(yNoisy);
+
+disp(bin_input_sig)
+disp(bin_judged_sig)
+
+for i = 1:bitrate:length(signal)*5
+    diff = bin_judged_sig(i:i+1)~=bin_input_sig(i:i+4);
+    if(nnz(diff) == 0)
+        n = n + 1;
+    end
+end
+
+disp(n);
 
 figure 
 subplot(2,1,1)
